@@ -9,6 +9,6 @@ or<br>
 <code>choco install python -y</code><br>
 <br>
 <b>Prepare Python environment</b><br>
-<code>python --version                       #should respond with 'Python 3.x.x'</code><br>
-<code>python -m pip install requests         #should respond with 'Successfully installed requests-2.x.x'</code><br>
-<code>python -m pip install BeautifulSoup4   #should respond with 'Successfully installed BeautifulSoup4-x.x.x'</code><br>
+<code>python --version</code>                       #should respond with 'Python 3.x.x'<br>
+<code>python -m pip install requests</code>         #should respond with 'Successfully installed requests-2.x.x'<br>
+<code>python -m pip install BeautifulSoup4</code>   #should respond with 'Successfully installed BeautifulSoup4-x.x.x'<br>
