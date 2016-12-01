@@ -1,0 +1,2 @@
+import defgrab
+defgrab.grabber();
