@@ -1,5 +1,5 @@
 <b>Prepare Windows machine</b><br>
-Install Python 3.x manually<br>
+Install Python 3.x manually with configuration of PATH variables<br>
 or<br>
 <code>powershell</code>                           #requires Powershell 3+<br>
 <code>Start-Process PowerShell –Verb RunAs</code> <br>
