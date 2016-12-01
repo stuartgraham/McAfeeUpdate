@@ -1,7 +1,7 @@
 <b>Prepare Windows machine</b><br>
 Install Python 3.x manually<br>
 or<br>
-Command - Powershell                            #requires Powershell 3+<br>
+Command - <code>powershell</code>                           #requires Powershell 3+<br>
 Command - Start-Process PowerShell –Verb RunAs<br>
 Command - set-executionpolicy remotesigned<br>
 Command - iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex<br>
