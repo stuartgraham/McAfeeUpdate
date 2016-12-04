@@ -53,6 +53,11 @@ def loglinkdb(linkdb):
     logger.info("Processing linkdb log")
     logger.info("\n".join(linkdb))
 
+# Function will walk the filesystem and remove old files and folders
+# as defined in the retention setting in config.py
+def purgeold():
+    print("code to go here")
+
 roothttp()
 childhttp()
 linksprocess(linkdb)
