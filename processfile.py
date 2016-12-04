@@ -8,7 +8,7 @@ import config
 
 # Module will check existance of the base destination path from config
 # and create as needed
-def checkdestpath (destinationpath=config.destinationpath):
+def checkdestpath(destinationpath=config.destinationpath):
     if not os.path.exists(destinationpath):
         try:
             os.mkdir(destinationpath)
@@ -20,13 +20,13 @@ def checkdestpath (destinationpath=config.destinationpath):
             print(destinationpath + "already exists")
 
 # Module strips the sourcepath defined in config.py from the URI
-def pathdef (uri, sourcepath=config.sourcepath):
+def pathdef(uri, sourcepath=config.sourcepath):
     path = uri.replace(sourcepath, "")
     return path
 
 # Module will test and create the directory structure for the file
 # as needed
-def localdir (path, destinationpath=config.destinationpath):
+def localdir(path, destinationpath=config.destinationpath):
     directory = path.split("/")
     directory.pop(0)
     filename = directory[-1]
@@ -53,11 +53,14 @@ def localdir (path, destinationpath=config.destinationpath):
     return filename, mkpath
 
 
-def processfile (dluri, sourcepath=config.sourcepath, destpath=config.destinationpath):
+def go(dluri, sourcepath=config.sourcepath, destpath=config.destinationpath):
     checkdestpath()
     path = pathdef(dluri)
     z = localdir(path)
-
+    x = z[0]
+    y = z[1]
+    print(x)
+    print(y)
 
 
 # Test execution

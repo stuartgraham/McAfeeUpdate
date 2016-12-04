@@ -1,6 +1,7 @@
 import sys
 import os
 import defgrab
+import processfile
 
 # Define link list
 linkdb = []
@@ -12,12 +13,16 @@ def processsoup(soup, baseurl):
 
 # Resolve root directory links
 rootsoup = defgrab.linkdir()
+print("Processing root HTTP directory")
 processsoup(rootsoup[0], rootsoup[1])
 
 # Resolve child diretory links
+childsoupcounter = 0
 for tempuri in linkdb:
     if tempuri[-1] == '/':
+        childsoupcounter += 1
         childsoup = defgrab.linkdir(tempuri)
+        print("Processing child HTTP directory " + str(childsoupcounter))
         processsoup(childsoup[0], childsoup[1])
 
 # Log linkdb creation
@@ -32,11 +37,12 @@ if not os.path.exists('logs'):
 if os.path.exists('logs/linkdb.log'):
     os.remove('logs/linkdb.log')
 
+print("Processing linkdb log")
 sys.stdout = open('logs/linkdb.log', 'w')
 print("\n".join(linkdb))
 
 # Process file from linkdb
 for dluri in linkdb:
     if not dluri[-1] == '/':
-        continue
-        processfile(dluri)
+        print("Processing " + dluri)
+        processfile.go(dluri)
