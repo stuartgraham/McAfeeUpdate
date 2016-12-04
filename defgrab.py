@@ -1,5 +1,4 @@
 import config
-import tree
 import requests
 from bs4 import BeautifulSoup
 
