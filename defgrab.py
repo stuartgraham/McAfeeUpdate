@@ -3,12 +3,29 @@ import tree
 import requests
 from bs4 import BeautifulSoup
 
-#Gather root HTML and configure the soup
-def grabber(pathext = ''):
-    resp = requests.get(config.SourcePath + pathext, proxies=config.Proxy, timeout=5)
+# Removes irrelevant links
+def removejunklinks(soup):
+    output = []
+    for link in soup.find_all('a'):
+# drop the sorting and formatting links
+        if '?' in link.get('href'):
+            continue
+# drop the parent directory links
+        elif '..' in link.get('href'):
+            continue
+        else:
+            x = (link.get('href'))
+            output.append(x)
+    return output
+
+# Sent URI string to requests module for resolution, if HTTP 200 pass to BeautifulSoup
+# module for cleansing links and pass to tree.process to remove junk links
+def linkdir(path=config.sourcepath):
+    resp = requests.get(url=path, proxies=config.proxy, timeout=5)
     if not resp.status_code == 200:
-        print ("Page not found. Fix the SourcePath setting.")
-    else:  
+        print("Page not found. Fix the sourcepath setting in config.py.")
+    else:
         soup = BeautifulSoup(resp.text, 'html.parser')
-        tree.process(soup)
-    
+        soup = removejunklinks(soup)
+        baseurl = path
+        return soup, baseurl
