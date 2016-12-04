@@ -2,6 +2,10 @@ import sys
 import os
 import defgrab
 import processfile
+import logging
+
+logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Define link list
 linkdb = []
@@ -14,7 +18,7 @@ def processsoup(soup, baseurl):
 # Resolve root directory links
 def roothttp():
     rootsoup = defgrab.linkdir()
-    print("Processing root HTTP directory")
+    logger.info("Processing root HTTP directory")
     processsoup(rootsoup[0], rootsoup[1])
 
 # Resolve child diretory links
@@ -24,17 +28,17 @@ def childhttp():
         if tempuri[-1] == '/':
             childsoupcounter += 1
             childsoup = defgrab.linkdir(tempuri)
-            print("Processing child HTTP directory " + str(childsoupcounter) + " " + tempuri)
+            logger.info("Processing child HTTP directory " + str(childsoupcounter) + " " + tempuri)
             processsoup(childsoup[0], childsoup[1])
 
 # Process file from linkdb
 def linksprocess(linkdb):
     for dluri in linkdb:
         if not dluri[-1] == '/':
-            print("Processing " + dluri)
+            logger.info("Processing " + dluri)
             processfile.go(dluri)
         else:
-            print("Not working")
+            logger.info("Not working")
 
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed
@@ -43,13 +47,11 @@ def loglinkdb(linkdb):
         try:
             os.mkdir('logs')
         except OSError as err:
-            print(err)
+            logger.debug(err)
             pass
-    if os.path.exists('logs/linkdb.log'):
-        os.remove('logs/linkdb.log')
-    print("Processing linkdb log")
-    sys.stdout = open('logs/linkdb.log', 'w')
-    print("\n".join(linkdb))
+
+    logger.info("Processing linkdb log")
+    logger.info("\n".join(linkdb))
 
 roothttp()
 childhttp()
