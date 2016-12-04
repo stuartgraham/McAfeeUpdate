@@ -120,8 +120,4 @@ def go(dluri, sourcepath=config.sourcepath, destpath=config.destinationpath):
         dlreq = checkfile(writepath, dluri)
         dlfile(dlreq, writepath, dluri)
 
-# Test execution
-#testuri ='http://update.nai.com/products/commonupdater/current/lmasecore2000/mase_det.mcs'
-testuri2 ='http://update.nai.com/products/commonupdater/mase_det.mcs'
-#testuri3 = ''
-go(testuri2)
+
