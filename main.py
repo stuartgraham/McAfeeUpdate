@@ -22,10 +22,12 @@ for tempuri in linkdb:
 
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed
-try:
-    os.mkdir('logs')
-except OSError:
-    pass
+if not os.path.exists('logs'):
+    try:
+        os.mkdir('logs')
+    except OSError as err:
+        print(err)
+        pass
 
 if os.path.exists('logs/linkdb.log'):
     os.remove('logs/linkdb.log')
@@ -37,4 +39,4 @@ print("\n".join(linkdb))
 for dluri in linkdb:
     if not dluri[-1] == '/':
         continue
-        processfile(dlurl)
+        processfile(dluri)
