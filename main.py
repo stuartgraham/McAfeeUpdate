@@ -7,7 +7,7 @@ import processfile
 import config
 
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d %H:%M',level=logging.INFO)
+logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define link list

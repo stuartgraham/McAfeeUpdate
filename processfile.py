@@ -5,7 +5,7 @@ import requests
 import config
 
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d %H:%M',level=logging.INFO)
+logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Module will check existance of the base destination path from config
@@ -70,6 +70,7 @@ def checkfile(writepath, dluri):
             resp = requests.get(url=dluri, proxies=config.proxy, timeout=5)
             upstreammd5 = resp.headers['ETag'].split(":", 1)[0]
             upstreammd5 = upstreammd5[1:]
+            logger.info("Downstream MD5 Hash : " + downstreammd5)
             logger.info("Upstream MD5 Hash   : " + upstreammd5)
             if upstreammd5 == downstreammd5:
                 logger.info(writepath + " MD5 match, skip downloading")
