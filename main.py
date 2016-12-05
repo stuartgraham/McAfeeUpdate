@@ -50,7 +50,6 @@ def linksprocess(linkdb):
 def loglinkdb(linkdb):
     logger.info("Processing linkdb log/n/n")
     logger.info("\n".join(linkdb))
-    logger.info("\n")
 
 # Function will walk the filesystem and remove old files and folders
 # as defined in the retention setting in config.py
@@ -88,3 +87,4 @@ roothttp()
 childhttp()
 linksprocess(linkdb)
 loglinkdb(linkdb)
+logger.info("****PASS COMPLETED****")
