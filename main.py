@@ -61,6 +61,9 @@ def loglinkdb(linkdb):
 # as defined in the retention setting in config.py
 def purgeold(retention=config.retention, rootdir=config.destinationpath):
     logger.info("Starting retention cleanup process")
+    retentionbuffer = float(0.5)
+    retention = retention + retentionbuffer
+    logger.info("Retention is set to " + retention + " days with 0.5 days buffer" )
     for root, dirs, files in os.walk(rootdir):
         if dirs == [] and files == []:
             os.removedirs(root)
@@ -73,9 +76,7 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
             currentsecs = time.time()
             deltasecs = currentsecs - createsecs
             deltadays = float(deltasecs/86400)
-            rententionbuffer = float(0.5)
-            rentention = retention + rententionbuffer
-            if deltadays > rentention:
+            if deltadays > retention:
                 try:
                     os.remove(path)
                     logger.info(path + " was " + str(deltadays) + " days old and deleted")
