@@ -1,11 +1,11 @@
-from bs4 import BeautifulSoup
 import logging
+from bs4 import BeautifulSoup
 import config
 import requests
 
-logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO)
+FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
+logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO,format=FORMAT)
 logger = logging.getLogger(__name__)
-
 
 # Removes irrelevant links
 def removejunklinks(soup):
@@ -25,6 +25,7 @@ def removejunklinks(soup):
 # Sent URI string to requests module for resolution, if HTTP 200 pass to BeautifulSoup
 # module for cleansing links and pass to tree.process to remove junk links
 def linkdir(path=config.sourcepath):
+
     resp = requests.get(url=path, proxies=config.proxy, timeout=5)
     if not resp.status_code == 200:
         logger.debug("Page not found. Fix the sourcepath setting in config.py.")

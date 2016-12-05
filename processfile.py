@@ -4,14 +4,9 @@ import logging
 import requests
 import config
 
-logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO)
+FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
+logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO,format=FORMAT)
 logger = logging.getLogger(__name__)
-
-# Establish Directory
-# Establish Destination
-# Establish if timestamp match
-# Download if no match
-# Log
 
 # Module will check existance of the base destination path from config
 # and create as needed

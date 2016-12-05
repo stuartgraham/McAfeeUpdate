@@ -1,9 +1,13 @@
 import os
+from os.path import join, getsize
+import logging
+import time
 import defgrab
 import processfile
-import logging
+import config
 
-logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO)
+FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
+logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO,format=FORMAT)
 logger = logging.getLogger(__name__)
 
 # Define link list
@@ -54,10 +58,34 @@ def loglinkdb(linkdb):
 
 # Function will walk the filesystem and remove old files and folders
 # as defined in the retention setting in config.py
-def purgeold():
-    print("code to go here")
+def purgeold(retention=config.retention, rootdir=config.destinationpath):
+    logger.info("Starting retention cleanup process")
+    for root, dirs, files in os.walk(rootdir):
+        if dirs == [] and files == []:
+            os.removedirs(root)
+            logger.info(root + " was empty and has been deleted")
 
+        for i in files:
+            path = (root+"\\"+i)
+            timestamp = os.stat(path)
+            createsecs = timestamp.st_ctime
+            currentsecs = time.time()
+            deltasecs = currentsecs - createsecs
+            deltadays = float(deltasecs/86400)
+            rententionbuffer = float(0.5)
+            rentention = retention + rententionbuffer
+            if deltadays > rentention:
+                try:
+                    os.remove(path)
+                    logger.info(path + " was " + str(deltadays) + " days old and deleted")
+                except OSError as err:
+                    logger.info("OSerror" + err)
+            else:
+                logger.info(path + " is " + str(deltadays) + " days old and is retained")
+
+# Main execution
 roothttp()
 childhttp()
 linksprocess(linkdb)
 loglinkdb(linkdb)
+purgeold()
