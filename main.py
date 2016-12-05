@@ -85,8 +85,8 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
                 logger.info(path + " is " + str(deltadays) + " days old and is retained")
 
 # Main execution
+purgeold()
 roothttp()
 childhttp()
 linksprocess(linkdb)
 loglinkdb(linkdb)
-purgeold()
