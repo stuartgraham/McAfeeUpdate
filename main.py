@@ -6,6 +6,7 @@ import defgrab
 import processfile
 import config
 
+#Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
 logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ def linksprocess(linkdb):
             logger.info("Processing " + dluri)
             processfile.go(dluri)
         else:
-            logger.info("Not working")
+            logger.info("Not working, passed in link" + str(dluri))
 
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed

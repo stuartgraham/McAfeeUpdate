@@ -4,6 +4,7 @@ import logging
 import requests
 import config
 
+#Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
 logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -54,7 +55,7 @@ def localdir(path, destinationpath=config.destinationpath):
                 except OSError as err:
                     logger.info(err)
             else:
-                logger.info(mkpath + " already exists")
+                logger.info(mkpath + " already exists, skipping mkdir for this directory")
     return mkpath, filename
 
 # Will download the file using the requests module

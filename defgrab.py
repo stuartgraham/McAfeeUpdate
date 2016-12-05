@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import config
 import requests
 
+#Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
 logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
 logger = logging.getLogger(__name__)
