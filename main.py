@@ -44,8 +44,6 @@ def linksprocess(linkdb):
         if not dluri[-1] == '/':
             logger.info("Processing " + dluri)
             processfile.go(dluri)
-        else:
-            logger.info("Not working, passed in link " + str(dluri))
 
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed
@@ -84,6 +82,7 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
                 logger.info(path + " is " + str(deltadays) + " days old and is retained")
 
 # Main execution
+processfile.checkdestpath()
 purgeold()
 roothttp()
 childhttp()

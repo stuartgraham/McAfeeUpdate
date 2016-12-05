@@ -104,7 +104,7 @@ def dlfile(dlreq, writepath, dluri):
 # Main method in the module, when called will create folder structure and
 # download files for URIs passed to it
 def go(dluri, sourcepath=config.sourcepath, destpath=config.destinationpath):
-    checkdestpath()
+#    checkdestpath()
     path = pathdef(dluri)
     temppath = localdir(path)
     x = temppath[0]
