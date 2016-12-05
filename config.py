@@ -9,4 +9,4 @@ destinationpath = 'c:\McAfeeDefs'
 proxy = ''
 
 # Days to keep older files
-retention = 14
+retention = 2

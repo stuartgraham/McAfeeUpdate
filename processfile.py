@@ -59,8 +59,7 @@ def localdir(path, destinationpath=config.destinationpath):
                 except OSError as err:
                     logger.info(err)
             else:
-                logger.info("DIRCHECK: " + mkpath + " already exists, skipping mkdir\
-                 for this directory")
+                logger.info("DIRCHECK: " + mkpath + " already exists, skipping mkdir")
     return mkpath, filename
 
 # Will download the file using the requests module
