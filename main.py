@@ -8,7 +8,7 @@ import config
 
 #Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
+logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define link list
@@ -63,7 +63,7 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
     logger.info("Starting retention cleanup process")
     retentionbuffer = float(0.5)
     retention = retention + retentionbuffer
-    logger.info("Retention is set to " + retention + " days with 0.5 days buffer" )
+    logger.info("Retention is set to " + str(retention) + " days with 0.5 days buffer" )
     for root, dirs, files in os.walk(rootdir):
         if dirs == [] and files == []:
             os.removedirs(root)
@@ -76,6 +76,7 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
             currentsecs = time.time()
             deltasecs = currentsecs - createsecs
             deltadays = float(deltasecs/86400)
+            deltadays = round(deltadays, 3)
             if deltadays > retention:
                 try:
                     os.remove(path)

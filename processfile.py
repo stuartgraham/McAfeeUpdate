@@ -6,7 +6,7 @@ import config
 
 #Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
+logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Module will check existance of the base destination path from config
@@ -116,5 +116,3 @@ def go(dluri, sourcepath=config.sourcepath, destpath=config.destinationpath):
         writepath = x + "\\" + y
         dlreq = checkfile(writepath, dluri)
         dlfile(dlreq, writepath, dluri)
-
-
