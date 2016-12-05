@@ -45,7 +45,7 @@ def linksprocess(linkdb):
             logger.info("Processing " + dluri)
             processfile.go(dluri)
         else:
-            logger.info("Not working, passed in link" + str(dluri))
+            logger.info("Not working, passed in link " + str(dluri))
 
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed
