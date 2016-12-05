@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 import config
 import requests
 
-FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
-logging.basicConfig(filename='the.log',datefmt='%m-%d %H:%M',level=logging.INFO,format=FORMAT)
+FORMAT = '%(asctime)s %(name)-12s %(message)s'
+logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%m-%d-%y %H:%M',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Removes irrelevant links
