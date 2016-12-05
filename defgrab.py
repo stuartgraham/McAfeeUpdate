@@ -1,9 +1,14 @@
+import os
 import logging
 from bs4 import BeautifulSoup
 import config
 import requests
 
 #Logging config
+try:
+    os.mkdir('logs')
+except OSError:
+    pass
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
 logging.basicConfig(filename='logs/updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)

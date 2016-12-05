@@ -5,6 +5,10 @@ import requests
 import config
 
 #Logging config
+try:
+    os.mkdir('logs')
+except OSError:
+    pass
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
 logging.basicConfig(filename='logs/updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -67,7 +71,6 @@ def checkfile(writepath, dluri):
                 buf = m.read()
                 hasher.update(buf)
                 downstreammd5 = hasher.hexdigest()
-            logger.info("Downstream MD5 Hash : " + downstreammd5)
             resp = requests.get(url=dluri, proxies=config.proxy, timeout=5)
             upstreammd5 = resp.headers['ETag'].split(":", 1)[0]
             upstreammd5 = upstreammd5[1:]

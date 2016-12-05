@@ -1,5 +1,4 @@
 import os
-from os.path import join, getsize
 import logging
 import time
 import defgrab
