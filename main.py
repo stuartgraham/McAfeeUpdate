@@ -51,15 +51,9 @@ def linksprocess(linkdb):
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed
 def loglinkdb(linkdb):
-    if not os.path.exists('logs'):
-        try:
-            os.mkdir('logs')
-        except OSError as err:
-            logger.debug(err)
-            pass
-
-    logger.info("Processing linkdb log")
+    logger.info("Processing linkdb log/n/n")
     logger.info("\n".join(linkdb))
+    logger.info("\n")
 
 # Function will walk the filesystem and remove old files and folders
 # as defined in the retention setting in config.py
