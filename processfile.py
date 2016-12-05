@@ -6,7 +6,7 @@ import config
 
 #Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
+logging.basicConfig(filename='updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Module will check existance of the base destination path from config

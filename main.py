@@ -7,8 +7,12 @@ import processfile
 import config
 
 #Logging config
+try:
+    os.mkdir('logs')
+except OSError:
+    pass
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='the.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
+logging.basicConfig(filename='updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define link list
@@ -63,7 +67,7 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
     logger.info("Starting retention cleanup process")
     retentionbuffer = float(0.5)
     retention = retention + retentionbuffer
-    logger.info("Retention is set to " + str(retention) + " days with 0.5 days buffer" )
+    logger.info("Retention is set to " + str(retention) + " days with 0.5 days buffer")
     for root, dirs, files in os.walk(rootdir):
         if dirs == [] and files == []:
             os.removedirs(root)

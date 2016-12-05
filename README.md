@@ -13,8 +13,8 @@ or<br>
 <code>python -m pip install requests</code>         #should respond with 'Successfully installed requests-2.x.x'<br>
 <code>python -m pip install BeautifulSoup4</code>   #should respond with 'Successfully installed BeautifulSoup4-x.x.x'<br>
 <br>
-<b>Execution</b>
+<b>Execution</b><br>
 <code>python main.py</code>
 <br>
-<b>Logging</b>
-<code>the.log</code>
+<b>Logging</b><br>
+<code>logs/updater.log</code>
