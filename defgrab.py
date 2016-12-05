@@ -5,7 +5,7 @@ import requests
 
 #Logging config
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
+logging.basicConfig(filename='logs/updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Removes irrelevant links
