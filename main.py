@@ -11,7 +11,7 @@ try:
 except OSError:
     pass
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename='logs/updater.log',format=FORMAT,datefmt='%d-%b-%y %H:%M:%S',level=logging.INFO)
+logging.basicConfig(filename=('logs/updater'+ time.strftime("%d%m%Y") +'.log'), format=FORMAT, datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define link list
@@ -89,3 +89,5 @@ childhttp()
 linksprocess(linkdb)
 loglinkdb(linkdb)
 logger.info("****PASS COMPLETED****")
+#Purge old logs
+purgeold(30, 'logs')
