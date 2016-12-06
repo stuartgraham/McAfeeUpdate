@@ -20,12 +20,11 @@ def checkdestpath(destinationpath=config.destinationpath):
     if not os.path.exists(destinationpath):
         try:
             os.mkdir(destinationpath)
-            logger.info(destinationpath + " directory was created")
+            logger.info("DIRCHECKCREATE: " + destinationpath + " was created")
         except OSError as err:
             logger.info(err)
-            pass
         else:
-            logger.info(destinationpath + " directory already exists skipping")
+            logger.info("DIRCHECKSKIP: " + destinationpath + " already exists, skipping mkdir")
 
 # Module strips the sourcepath defined in config.py from the URI
 def pathdef(uri, sourcepath=config.sourcepath):
@@ -56,11 +55,11 @@ def localdir(path, destinationpath=config.destinationpath):
             if not os.path.exists(mkpath):
                 try:
                     os.mkdir(mkpath)
-                    logger.info("DIRCHECK: " + mkpath + " was created")
+                    logger.info("DIRCHECKCREATE: " + mkpath + " was created")
                 except OSError as err:
                     logger.info(err)
             else:
-                logger.info("DIRCHECK: " + mkpath + " already exists, skipping mkdir")
+                logger.info("DIRCHECKSKIP: " + mkpath + " already exists, skipping mkdir")
     return mkpath, filename
 
 # Will download the file using the requests module
@@ -78,7 +77,7 @@ def checkfile(writepath, dluri):
             logger.info("Downstream MD5 Hash : " + downstreammd5)
             logger.info("Upstream MD5 Hash   : " + upstreammd5)
             if upstreammd5 == downstreammd5:
-                logger.info(writepath + " MD5 match, skip downloading")
+                logger.info("FILESKIP" + writepath + " MD5 match, skip downloading")
                 dlreq = 0
             else:
                 logger.info(writepath + " MD5 didnt match, progressing to download")
@@ -94,12 +93,12 @@ def checkfile(writepath, dluri):
 def dlfile(dlreq, writepath, dluri):
     if dlreq == 1:
         resp = requests.get(url=dluri, proxies=config.proxy, stream=True)
-        logger.info("Committing " + dluri + " to " + writepath)
+        logger.info("DOWNLOADFILE: Downloading " + dluri + " to " + writepath)
         with open(writepath, 'wb') as f:
             for chunk in resp.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
-        logger.info(writepath + " completed, sending for MD5 verification")
+        logger.info("DOWNLOADCOMPLETE: " + writepath + " completed, sending for MD5 verification")
         checkfile(writepath, dluri)
 
 # Main method in the module, when called will create folder structure and

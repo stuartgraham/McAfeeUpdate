@@ -75,11 +75,11 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
             if deltadays > retention:
                 try:
                     os.remove(path)
-                    logger.info(path + " was " + str(deltadays) + " days old and deleted")
+                    logger.info("RETENTIONDEL: " + path + " was " + str(deltadays) + " days old and deleted")
                 except OSError as err:
                     logger.info("OSerror" + err)
             else:
-                logger.info(path + " is " + str(deltadays) + " days old and is retained")
+                logger.info("RETENTIONKEEP: " + path + " is " + str(deltadays) + " days old and is retained")
 
 # Main execution
 processfile.checkdestpath()
