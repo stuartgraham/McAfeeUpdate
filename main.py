@@ -57,7 +57,7 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
     logger.info("Starting retention cleanup process")
     retentionbuffer = float(0.5)
     retention = retention + retentionbuffer
-    logger.info("Retention is set to " + str(retention) + " days with 0.5 days buffer")
+    logger.info("Retention is set to " + str(retention) + " days, rention setting + 0.5 day buffer")
     for root, dirs, files in os.walk(rootdir):
         if dirs == [] and files == []:
             os.removedirs(root)
