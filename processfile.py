@@ -77,7 +77,7 @@ def checkfile(writepath, dluri):
             logger.info("Downstream MD5 Hash : " + downstreammd5)
             logger.info("Upstream MD5 Hash   : " + upstreammd5)
             if upstreammd5 == downstreammd5:
-                logger.info("FILESKIP" + writepath + " MD5 match, skip downloading")
+                logger.info("FILESKIP: " + writepath + " MD5 match, skip downloading")
                 dlreq = 0
             else:
                 logger.info(writepath + " MD5 didnt match, progressing to download")
