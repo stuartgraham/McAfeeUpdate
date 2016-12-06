@@ -5,7 +5,11 @@ sourcepath = 'http://update.nai.com/products/commonupdater/'
 destinationpath = 'c:\McAfeeDefs'
 
 # Proxy Setting 
-# Example : Proxy = {'http': 'http://user:pass@10.10.1.10:3128/'}
+# Example
+#proxy = {
+#    'http': 'https://proxy.example.com:8080',
+#    'https': 'https://proxy.example.com:8080',
+#}
 proxy = ''
 
 # Days to keep older files
