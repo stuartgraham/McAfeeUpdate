@@ -67,7 +67,8 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
             path = (root+"\\"+i)
             timestamp = os.stat(path)
             createsecs = timestamp.st_ctime
-            currentsecs = time.time()
+            templocaltime = time.localtime()
+            currentsecs = time.mktime(templocaltime)
             deltasecs = currentsecs - createsecs
             deltadays = float(deltasecs/86400)
             deltadays = round(deltadays, 3)
