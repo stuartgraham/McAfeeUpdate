@@ -26,6 +26,7 @@ def checkdestpath(destinationpath=config.destinationpath):
         else:
             logger.info("DIRCHECKSKIP: " + destinationpath + " already exists, skipping mkdir")
 #Create anchor file to stop deletion
+    print(str(destinationpath))
     if not os.path.exists(destinationpath + '\\anchor.txt'):
         with open(destinationpath + '\\anchor.txt', 'a'):
             os.utime(destinationpath + '\\anchor.txt', None)
