@@ -1,7 +1,8 @@
 # Source URI for definitions
 sourcepath = 'http://update.nai.com/products/commonupdater/'
 
-# Destination path on target machine 
+# Destination path on target machine
+# Keep path open ended not ending in \
 destinationpath = 'c:\McAfeeDefs'
 
 # Proxy Setting 

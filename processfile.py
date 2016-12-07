@@ -19,12 +19,20 @@ logger = logging.getLogger(__name__)
 def checkdestpath(destinationpath=config.destinationpath):
     if not os.path.exists(destinationpath):
         try:
-            os.mkdir(destinationpath)
+            os.makedirs(destinationpath)
             logger.info("DIRCHECKCREATE: " + destinationpath + " was created")
         except OSError as err:
             logger.info(err)
         else:
             logger.info("DIRCHECKSKIP: " + destinationpath + " already exists, skipping mkdir")
+#Create anchor file to stop deletion
+    if not os.path.exists(destinationpath + '\\anchor.txt'):
+        with open(destinationpath + '\\anchor.txt', 'a'):
+            os.utime(destinationpath + '\\anchor.txt', None)
+    else:
+        os.remove(destinationpath + '\\anchor.txt')
+        with open(destinationpath + '\\anchor.txt', 'a'):
+            os.utime(destinationpath + '\\anchor.txt', None)
 
 # Module strips the sourcepath defined in config.py from the URI
 def pathdef(uri, sourcepath=config.sourcepath):
@@ -44,22 +52,13 @@ def localdir(path, destinationpath=config.destinationpath):
         directory = path.split("/")
         filename = directory[-1]
         directory.pop(-1)
-        depth = 0
-        for i in directory:
-            if depth == 0:
-                workingpath = i
-            else:
-                workingpath = "\\".join(directory[0:depth+1])
-            depth += 1
-            mkpath = (destinationpath + "\\" + workingpath)
-            if not os.path.exists(mkpath):
-                try:
-                    os.mkdir(mkpath)
-                    logger.info("DIRCHECKCREATE: " + mkpath + " was created")
-                except OSError as err:
-                    logger.info(err)
-            else:
-                logger.info("DIRCHECKSKIP: " + mkpath + " already exists, skipping mkdir")
+        workingpath = "\\".join(directory)
+        mkpath = (destinationpath + "\\" + workingpath)
+        try:
+            os.makedirs(mkpath)
+            logger.info("DIRCHECKCREATE: " + mkpath + " was created")
+        except OSError:
+            logger.info("DIRCHECKSKIP: " + mkpath + " already exists, skipping mkdir")
     return mkpath, filename
 
 # Will download the file using the requests module
