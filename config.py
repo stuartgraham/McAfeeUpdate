@@ -3,7 +3,7 @@ sourcepath = 'http://update.nai.com/products/commonupdater/'
 
 # Destination path on target machine
 # Keep path open ended not ending in \
-destinationpath = 'c:\Definitions\McAfee'
+destinationpath = 'C:\McAfeeDefs'
 
 # Proxy Setting 
 # Example
