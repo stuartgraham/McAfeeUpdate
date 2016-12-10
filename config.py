@@ -15,3 +15,6 @@ proxy = ''
 
 # Days to keep older files
 retention = 2
+
+# Defines time in seconds for HTTP requests
+httptimeout = 60

@@ -32,7 +32,7 @@ def removejunklinks(soup):
 # Sent URI string to requests module for resolution, if HTTP 200 pass to BeautifulSoup
 # module for cleansing links and pass to tree.process to remove junk links
 def linkdir(path=config.sourcepath):
-    resp = requests.get(url=path, proxies=config.proxy, timeout=5)
+    resp = requests.get(url=path, proxies=config.proxy, timeout=config.httptimeout)
     if not resp.status_code == 200:
         logger.debug("Page not found. Fix the sourcepath setting in config.py.")
     else:

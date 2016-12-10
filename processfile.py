@@ -70,7 +70,7 @@ def checkfile(writepath, dluri):
                 buf = m.read()
                 hasher.update(buf)
                 downstreammd5 = hasher.hexdigest()
-            resp = requests.head(url=dluri, proxies=config.proxy, timeout=5)
+            resp = requests.head(url=dluri, proxies=config.proxy, timeout=config.httptimeout)
             upstreammd5 = resp.headers['ETag'].split(":", 1)[0]
             upstreammd5 = upstreammd5[1:]
             logger.info("Downstream MD5 Hash : " + downstreammd5)
