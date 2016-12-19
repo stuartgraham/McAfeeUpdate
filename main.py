@@ -11,57 +11,60 @@ try:
 except OSError:
     pass
 FORMAT = '%(asctime)s %(name)-12s %(message)s'
-logging.basicConfig(filename=('logs/updater'+ time.strftime("%d%m%Y") +'.log'), format=FORMAT, datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(filename=('logs/updater'+ time.strftime("%d%m%Y") +'.log'),
+                    format=FORMAT, datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
+LOGGER = logging.getLogger(__name__)
 
 # Define link list
 linkdb = []
 
-# Process fully qualifed links
 def processsoup(soup, baseurl):
+    """Process fully qualifed links"""
     for line in soup:
         linkdb.append(baseurl + line)
 
-# Resolve root directory links
 def roothttp():
+    """Resolve root directory links"""
     rootsoup = defgrab.linkdir()
-    logger.info("Processing root HTTP directory")
+    LOGGER.info("Processing root HTTP directory")
     processsoup(rootsoup[0], rootsoup[1])
 
-# Resolve child diretory links
 def childhttp():
+    """Resolve child diretory links"""
     childsoupcounter = 0
     for tempuri in linkdb:
         if tempuri[-1] == '/':
             childsoupcounter += 1
             childsoup = defgrab.linkdir(tempuri)
-            logger.info("Processing child HTTP directory " + str(childsoupcounter) + " " + tempuri)
+            LOGGER.info("Processing child HTTP directory " + str(childsoupcounter) + " " + tempuri)
             processsoup(childsoup[0], childsoup[1])
 
 # Process file from linkdb
 def linksprocess(linkdb):
+    """Process file from linkdb"""
     for dluri in linkdb:
         if not dluri[-1] == '/':
-            logger.info("Processing " + dluri)
+            LOGGER.info("Processing " + dluri)
             processfile.go(dluri)
 
 # Log linkdb creation
 # Test for Logs Dir and existing files, rectify as needed
 def loglinkdb(linkdb):
-    logger.info("Processing linkdb log/n/n")
-    logger.info("\n".join(linkdb))
+    """Log linkdb creation. Test for Logs Dir and existing files, rectify as needed"""
+    LOGGER.info("Processing linkdb log/n/n")
+    LOGGER.info("\n".join(linkdb))
 
 # Function will walk the filesystem and remove old files and folders
 # as defined in the retention setting in config.py
 def purgeold(retention=config.retention, rootdir=config.destinationpath):
-    logger.info("Starting retention cleanup process")
+    LOGGER.info("Starting retention cleanup process")
     retentionbuffer = float(0.5)
     retention = retention + retentionbuffer
-    logger.info("Retention is set to " + str(retention) + " days, rention setting + 0.5 day buffer")
+    LOGGER.info("Retention is set to " + str(retention) + " days, rention setting + 0.5 day buffer")
     for root, dirs, files in os.walk(rootdir):
         if dirs == [] and files == []:
             os.removedirs(root)
-            logger.info(root + " was empty and has been deleted")
+            LOGGER.info(root + " was empty and has been deleted")
 
         for i in files:
             path = (root+"\\"+i)
@@ -75,11 +78,11 @@ def purgeold(retention=config.retention, rootdir=config.destinationpath):
             if deltadays > retention:
                 try:
                     os.remove(path)
-                    logger.info("RETENTIONDEL: " + path + " was " + str(deltadays) + " days old and deleted")
+                    LOGGER.info("RETENTIONDEL: " + path + " was " + str(deltadays) + " days old and deleted")
                 except OSError as err:
-                    logger.info("OSerror" + err)
+                    LOGGER.info("OSerror" + err)
             else:
-                logger.info("RETENTIONKEEP: " + path + " is " + str(deltadays) + " days old and is retained")
+                LOGGER.info("RETENTIONKEEP: " + path + " is " + str(deltadays) + " days old and is retained")
 
 # Main execution
 processfile.checkdestpath()
@@ -88,6 +91,6 @@ roothttp()
 childhttp()
 linksprocess(linkdb)
 loglinkdb(linkdb)
-logger.info("****PASS COMPLETED****")
+LOGGER.info("****PASS COMPLETED****")
 #Purge old logs
 purgeold(30, 'logs')

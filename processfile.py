@@ -75,6 +75,7 @@ def checkfile(writepath, dluri):
             upstreammd5 = upstreammd5[1:]
             logger.info("Downstream MD5 Hash : " + downstreammd5)
             logger.info("Upstream MD5 Hash   : " + upstreammd5)
+            resp.close()
             if upstreammd5 == downstreammd5:
                 logger.info("FILESKIP: " + writepath + " MD5 match, skip downloading")
                 dlreq = 0
@@ -91,12 +92,13 @@ def checkfile(writepath, dluri):
 
 def dlfile(dlreq, writepath, dluri):
     if dlreq == 1:
-        resp = requests.get(url=dluri, proxies=config.proxy, stream=True)
+        resp = requests.get(url=dluri, proxies=config.proxy, stream=True, timeout=config.httptimeout)
         logger.info("DOWNLOADFILE: Downloading " + dluri + " to " + writepath)
         with open(writepath, 'wb') as f:
             for chunk in resp.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
+        resp.close()
         logger.info("DOWNLOADCOMPLETE: " + writepath + " completed, sending for MD5 verification")
         checkfile(writepath, dluri)
 
