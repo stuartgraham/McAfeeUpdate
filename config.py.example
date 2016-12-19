@@ -1,3 +1,5 @@
+# Change file to config.py
+#
 # Source URI for definitions
 sourcepath = 'http://update.nai.com/products/commonupdater/'
 
