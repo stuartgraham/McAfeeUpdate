@@ -20,3 +20,6 @@ retention = 2
 
 # Defines time in seconds for HTTP requests
 httptimeout = (30, 60)
+
+# Define maximum retry events before failing
+maxretries = 100

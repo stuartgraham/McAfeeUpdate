@@ -70,16 +70,20 @@ def checkfile(writepath, dluri):
                 buf = m.read()
                 hasher.update(buf)
                 downstreammd5 = hasher.hexdigest()
-            try:
-                resp = requests.head(url=dluri, proxies=config.proxy, timeout=config.httptimeout)
-                upstreammd5 = resp.headers['ETag'].split(":", 1)[0]
-                upstreammd5 = upstreammd5[1:]
-                logger.info("Downstream MD5 Hash : " + downstreammd5)
-                logger.info("Upstream MD5 Hash   : " + upstreammd5)
-                resp.close()
-            except requests.exceptions.Timeout:
-                logger.error("Connecion timed out gathering the header")
 
+            for _ in range(config.maxretries):
+                try:
+                    resp = requests.head(url=dluri, proxies=config.proxy,
+                                         timeout=config.httptimeout)
+                    upstreammd5 = resp.headers['ETag'].split(":", 1)[0]
+                    upstreammd5 = upstreammd5[1:]
+                    logger.info("Downstream MD5 Hash : " + downstreammd5)
+                    logger.info("Upstream MD5 Hash   : " + upstreammd5)
+                    resp.close()
+                    break
+                except requests.exceptions.Timeout:
+                    logger.error("Connecion timed out gathering the header")
+                
             if upstreammd5 == downstreammd5:
                 logger.info("FILESKIP: " + writepath + " MD5 match, skip downloading")
                 dlreq = 0
@@ -96,17 +100,20 @@ def checkfile(writepath, dluri):
 
 def dlfile(dlreq, writepath, dluri):
     if dlreq == 1:
-        try:
-            resp = requests.get(url=dluri, proxies=config.proxy,
-                                stream=True, timeout=config.httptimeout)
-            logger.info("DOWNLOADFILE: Downloading " + dluri + " to " + writepath)
-            with open(writepath, 'wb') as f:
-                for chunk in resp.iter_content(chunk_size=1024):
-                    if chunk:
-                        f.write(chunk)
-        except requests.exceptions.Timeout:
-            logger.error("Connection timed out downloading the file")
-        resp.close()
+        for _ in range(config.maxretries):
+            try:
+                resp = requests.get(url=dluri, proxies=config.proxy,
+                                    stream=True, timeout=config.httptimeout)
+                logger.info("DOWNLOADFILE: Downloading " + dluri + " to " + writepath)
+                with open(writepath, 'wb') as f:
+                    for chunk in resp.iter_content(chunk_size=1024):
+                        if chunk:
+                            f.write(chunk)
+                resp.close()
+                break
+            except requests.exceptions.Timeout:
+                logger.error("Connection timed out downloading the file")
+
         logger.info("DOWNLOADCOMPLETE: " + writepath + " completed, sending for MD5 verification")
         checkfile(writepath, dluri)
 
