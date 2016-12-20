@@ -78,7 +78,7 @@ def checkfile(writepath, dluri):
                 logger.info("Upstream MD5 Hash   : " + upstreammd5)
                 resp.close()
             except requests.exceptions.Timeout:
-                logger.error("Connecion timed out")
+                logger.error("Connecion timed out gathering the header")
 
             if upstreammd5 == downstreammd5:
                 logger.info("FILESKIP: " + writepath + " MD5 match, skip downloading")
@@ -105,7 +105,7 @@ def dlfile(dlreq, writepath, dluri):
                     if chunk:
                         f.write(chunk)
         except requests.exceptions.Timeout:
-            logger.error("Connection timed out")
+            logger.error("Connection timed out downloading the file")
         resp.close()
         logger.info("DOWNLOADCOMPLETE: " + writepath + " completed, sending for MD5 verification")
         checkfile(writepath, dluri)
