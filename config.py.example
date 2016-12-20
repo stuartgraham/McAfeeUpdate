@@ -7,7 +7,7 @@ sourcepath = 'http://update.nai.com/products/commonupdater/'
 # Keep path open ended not ending in \
 destinationpath = 'C:\McAfeeDefs'
 
-# Proxy Setting 
+# Proxy Setting
 # Example
 #proxy = {
 #    'http': 'https://proxy.example.com:8080',
