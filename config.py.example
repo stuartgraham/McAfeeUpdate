@@ -7,7 +7,8 @@ SOURCEPATH = 'http://update.nai.com/products/commonupdater/'
 
 # Destination path on target machine
 # Keep path open ended not ending in \
-DESTINATIONPATH = 'C:\McAfeeDefs'
+# Keep r' prefixing the path to deal with string literals
+DESTINATIONPATH = (r'C:\testy\test\test')
 
 # Proxy Setting
 # Example
@@ -18,7 +19,7 @@ DESTINATIONPATH = 'C:\McAfeeDefs'
 PROXY = ''
 
 # Days to keep older files
-RENTENTION = 7
+RETENTION = 7
 
 # Defines time in seconds for HTTP requests
 HTTPTIMEOUT = (30, 60)
