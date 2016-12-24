@@ -1,11 +1,13 @@
+"""Config file"""
+
 # Change file to config.py
 #
 # Source URI for definitions
-sourcepath = 'http://update.nai.com/products/commonupdater/'
+SOURCEPATH = 'http://update.nai.com/products/commonupdater/'
 
 # Destination path on target machine
 # Keep path open ended not ending in \
-destinationpath = 'C:\McAfeeDefs'
+DESTINATIONPATH = 'C:\McAfeeDefs'
 
 # Proxy Setting
 # Example
@@ -13,13 +15,13 @@ destinationpath = 'C:\McAfeeDefs'
 #    'http': 'https://proxy.example.com:8080',
 #    'https': 'https://proxy.example.com:8080',
 #}
-proxy = ''
+PROXY = ''
 
 # Days to keep older files
-retention = 2
+RENTENTION = 7
 
 # Defines time in seconds for HTTP requests
-httptimeout = (30, 60)
+HTTPTIMEOUT = (30, 60)
 
 # Define maximum retry events before failing
-maxretries = 100
+MAXRETRIES = 100
