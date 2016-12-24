@@ -1,20 +1,10 @@
-<b>Prepare Windows machine</b><br>
-Install Python 3.x manually with configuration of PATH variables<br>
-or<br>
-<code>powershell</code>                           #requires Powershell 3+<br>
-<code>Start-Process PowerShell –Verb RunAs</code> <br>
-<code>set-executionpolicy remotesigned</code><br>
-<code>iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex</code><br>
-<code>choco feature enable -n allowGlobalConfirmation</code><br>
-<code>choco install python -y</code><br>
-<br>
 <b>Prepare Python environment</b><br>
+Tested in Python 3.5 and 3.6
 <code>python --version</code>                       #should respond with 'Python 3.x.x'<br>
 <code>pip install -r requirements.txt</code>         #should respond with 'Successfully installed BeautifulSoup4-x.x.x requests-2.x.x'<br>
 <br> 
-<br>
 <b>Execution</b><br>
-<code>python main.py</code>
+<code>python main.py</code><br>
 <br>
 <b>Logging</b><br>
 <code>logs/updater.log</code>
