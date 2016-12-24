@@ -1,4 +1,4 @@
-Use on scheduled task to sync Upstream McAfee definition repository to local file system. Include ability to retain files for defined period of time,
+Use as a scheduled task, or one off, to sync Upstream McAfee definition repository to a local file system. Include ability to retain files for defined period of time,
 traverse proxies and configure source and destination directories. <br><br>
 Copy <code>config.py.example</code> and rename to <code>config.py</code>
 
