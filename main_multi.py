@@ -4,9 +4,27 @@ import os
 import logging
 import time
 import hashlib
+from queue import Queue
+from threading import Thread
 from bs4 import BeautifulSoup
 import requests
 import config
+
+PROCS = os.cpu_count()
+
+class DownloadWorker(Thread):
+    """ Defines worker threads"""
+    def __init__(self, queue):
+        Thread.__init__(self)
+        self.queue = queue
+
+    def run(self):
+        while True:
+            # Get the work from the queue and expand the tuple
+            writepath, link = self.queue.get()
+            dlreq = checkfile(writepath, link)
+            dlfile(dlreq, writepath, link)
+            self.queue.task_done()
 
 #Logging config
 try:
@@ -235,10 +253,11 @@ def process(links):
     """Create folder structure and download files for URIs passed to it"""
     dirscreated = 0
     filescreated = 0
-    for dluri in links:
-        if not dluri[-1] == '/':
-            LOGGER.info("LINKPROCESS : Processing " + dluri)
-            path = dluri.replace(config.SOURCEPATH, "")
+    linkqueue = Queue()
+    for link in links:
+        if not link[-1] == '/':
+            LOGGER.info("LINKPROCESS : Processing " + link)
+            path = link.replace(config.SOURCEPATH, "")
             temppath = makedir(path)
             # Incremenent the created directory counter
             if temppath[2]:
@@ -250,11 +269,18 @@ def process(links):
                 writepath = temppath[0] + temppath[1]
             else:
                 writepath = temppath[0] + "\\" + temppath[1]
-            dlreq = checkfile(writepath, dluri)
-            dlfile(dlreq, writepath, dluri)
-            if dlreq == 1:
-                filescreated += 1
+            linkqueue.put((writepath, link))
 
+    for worker in range(8):
+        worker = DownloadWorker(linkqueue)
+        # Setting daemon to True will let the main
+        # thread exit even though the workers are blocking
+        worker.daemon = True
+        worker.start()
+#    if dlreq == 1:
+#       filescreated += 1
+
+    linkqueue.join()
     LOGGER.info("DOWNLOADSTATS : " + str(dirscreated) + " directories were created")
     LOGGER.info("DOWNLOADSTATS : " + str(filescreated) + " files were downloaded")
 
