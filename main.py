@@ -8,6 +8,11 @@ from bs4 import BeautifulSoup
 import requests
 import config
 
+FILESDELETED = 0
+FILESCREATED = 0
+DIRSDELETED = 0
+DIRSCREATED = 0
+
 #Logging config
 try:
     os.mkdir('logs')
@@ -29,12 +34,10 @@ def purgeold(retention=config.RETENTION, rootdir=config.DESTINATIONPATH):
     retention += float(0.5)
     LOGGER.info("RETENTIONINFO : Retention is set to " + str(retention) +
                 " days, rention setting + 0.5 day buffer")
-    deleteddirs = 0
-    deletedfiles = 0
     for root, dirs, files in os.walk(rootdir):
         if dirs == [] and files == []:
             os.removedirs(root)
-            deleteddirs += 1
+            incrementcounters(dirsdeleted=1)
             LOGGER.info("RETENTIONDELETE : " + root + " was empty and has been deleted")
 
         for i in files:
@@ -43,7 +46,7 @@ def purgeold(retention=config.RETENTION, rootdir=config.DESTINATIONPATH):
             if deltadays > retention:
                 try:
                     os.remove(path)
-                    deletedfiles += 1
+                    incrementcounters(filesdeleted=1)
                     LOGGER.info("RETENTIONDELETE: " + path + " was " + str(deltadays) +
                                 " days old and deleted")
                 except OSError as err:
@@ -51,9 +54,6 @@ def purgeold(retention=config.RETENTION, rootdir=config.DESTINATIONPATH):
             else:
                 LOGGER.info("RETENTIONKEEP: " + path + " is " + str(deltadays) +
                             " days old and is retained")
-
-    LOGGER.info("RETENTIONSTATS : " + str(deleteddirs) + " directories were deleted")
-    LOGGER.info("RETENTIONSTATS : " + str(deletedfiles) + " files were deleted")
 
 
 def soupgen(path=config.SOURCEPATH):
@@ -107,6 +107,21 @@ def timecalc(timestamp):
     deltadays = round(deltadays, 3)
     return deltadays
 
+
+def incrementcounters(filesdeleted=0, filescreated=0, dirsdeleted=0, dirscreated=0):
+    """Increment counters"""
+    global FILESDELETED
+    global FILESCREATED
+    global DIRSDELETED
+    global DIRSCREATED
+    if filesdeleted > 0:
+        FILESDELETED += filesdeleted
+    if filescreated > 0:
+        FILESCREATED += filescreated
+    if dirsdeleted > 0:
+        DIRSDELETED += dirsdeleted
+    if dirscreated > 0:
+        DIRSCREATED += dirscreated
 
 def removejunklinks(soup):
     """Removes irrelevant links"""
@@ -233,8 +248,6 @@ def dlfile(dlreq, writepath, dluri):
 
 def process(links):
     """Create folder structure and download files for URIs passed to it"""
-    dirscreated = 0
-    filescreated = 0
     for dluri in links:
         if not dluri[-1] == '/':
             LOGGER.info("LINKPROCESS : Processing " + dluri)
@@ -242,7 +255,7 @@ def process(links):
             temppath = makedir(path)
             # Incremenent the created directory counter
             if temppath[2]:
-                dirscreated += 1
+                incrementcounters(dirscreated=1)
             # Decide how to download file
             if temppath[0] and temppath[1] == '':
                 LOGGER.info("NOURL : Blank URI skipping")
@@ -253,10 +266,7 @@ def process(links):
             dlreq = checkfile(writepath, dluri)
             dlfile(dlreq, writepath, dluri)
             if dlreq == 1:
-                filescreated += 1
-
-    LOGGER.info("DOWNLOADSTATS : " + str(dirscreated) + " directories were created")
-    LOGGER.info("DOWNLOADSTATS : " + str(filescreated) + " files were downloaded")
+                incrementcounters(filescreated=1)
 
 
 # Main execution
@@ -273,4 +283,9 @@ if __name__ == "__main__":
     COMPLETETIME = (time.time() - STARTTIME)/60
     COMPLETETIME = round(COMPLETETIME, 3)
     LOGGER.info("TIME : The pass took " + str(COMPLETETIME) + " minutes")
+    LOGGER.info("RETENTIONSTATS : " + str(DIRSDELETED) + " directories were deleted")
+    LOGGER.info("RETENTIONSTATS : " + str(FILESDELETED) + " files were deleted")
+    LOGGER.info("DOWNLOADSTATS : " + str(DIRSCREATED) + " directories were created")
+    LOGGER.info("DOWNLOADSTATS : " + str(FILESCREATED) + " files were downloaded")
     LOGGER.info("****** PASS COMPLETED ******")
+
