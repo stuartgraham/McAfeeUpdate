@@ -9,7 +9,8 @@ Tested in Python 3.5 and 3.6
 <code>pip install -r requirements.txt</code>         #should respond with 'Successfully installed BeautifulSoup4-x.x.x requests-2.x.x'<br>
 <br> 
 <b>Execution</b><br>
-<code>python main.py</code><br>
+<code>python main.py</code> for single threaded process<br>
+<code>python main_multi.py</code> for multi threaded process<br>
 <br>
 <b>Logging</b><br>
 <code>logs/updater.log</code><br>
