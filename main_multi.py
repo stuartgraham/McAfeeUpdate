@@ -18,16 +18,18 @@ DIRSCREATED = 0
 
 class DownloadWorker(Thread):
     """ Defines worker threads"""
-    def __init__(self, queue):
+    def __init__(self, workerid, queue):
         Thread.__init__(self)
         self.queue = queue
+        self.workerid = workerid
 
     def run(self):
         while True:
             # Get the work from the queue and expand the tuple
             writepath, link = self.queue.get()
-            dlreq = checkfile(writepath, link)
-            dlfile(dlreq, writepath, link)
+            workerid = self.workerid
+            dlreq = checkfile(writepath, link, workerid)
+            dlfile(dlreq, writepath, link, workerid)
             if dlreq == 1:
                 incrementcounters(filescreated=1)
             self.queue.task_done()
@@ -67,12 +69,12 @@ def purgeold(retention=config.RETENTION, rootdir=config.DESTINATIONPATH):
                 try:
                     os.remove(path)
                     incrementcounters(filesdeleted=1)
-                    LOGGER.info("RETENTIONDELETE: " + path + " was " + str(deltadays) +
+                    LOGGER.info("RETENTIONDELETE : " + path + " was " + str(deltadays) +
                                 " days old and deleted")
                 except OSError as err:
                     LOGGER.info("OSerror" + err)
             else:
-                LOGGER.info("RETENTIONKEEP: " + path + " is " + str(deltadays) +
+                LOGGER.info("RETENTIONKEEP : " + path + " is " + str(deltadays) +
                             " days old and is retained")
 
 
@@ -166,11 +168,11 @@ def checkdestpath(destinationpath=config.DESTINATIONPATH):
     if not os.path.exists(destinationpath):
         try:
             os.makedirs(destinationpath)
-            LOGGER.info("DIRCREATE: " + destinationpath + " was created")
+            LOGGER.info("DIRCREATE : " + destinationpath + " was created")
         except OSError as err:
             LOGGER.info(err)
         else:
-            LOGGER.info("DIRSKIP: " + destinationpath + " already exists, skipping mkdir")
+            LOGGER.info("DIRSKIP : " + destinationpath + " already exists, skipping mkdir")
     #Create anchor file to stop deletion
     anchorfile = (destinationpath + '\\anchor.txt')
     if not os.path.exists(anchorfile):
@@ -201,14 +203,14 @@ def makedir(path, destinationpath=config.DESTINATIONPATH):
         # Execute makedirs to build directors
         try:
             os.makedirs(mkpath)
-            LOGGER.info("DIRCHECKCREATE: " + mkpath + " was created")
+            LOGGER.info("DIRCHECKCREATE : " + mkpath + " was created")
             dircreated = True
         except OSError:
-            LOGGER.info("DIRCHECKSKIP: " + mkpath + " already exists, skipping mkdir")
+            LOGGER.info("DIRCHECKSKIP : " + mkpath + " already exists, skipping mkdir")
     return mkpath, filename, dircreated
 
 
-def checkfile(writepath, dluri):
+def checkfile(writepath, dluri, workerid):
     """Inspect the files upstream header tags for md5 hash and compare
     before sending for download as required"""
     if os.path.exists(writepath):
@@ -225,36 +227,42 @@ def checkfile(writepath, dluri):
                                          timeout=config.HTTPTIMEOUT)
                     upstreammd5 = resp.headers['ETag'].split(":", 1)[0]
                     upstreammd5 = upstreammd5[1:]
-                    LOGGER.info("HASHCALC : Downstream MD5 Hash : " + downstreammd5)
-                    LOGGER.info("HASHCALC : Upstream MD5 Hash   : " + upstreammd5)
+                    LOGGER.info("WorkerID " + str(workerid) + " : HASHCALC : Downstream MD5 Hash : "
+                                + downstreammd5)
+                    LOGGER.info("WorkerID " + str(workerid) + " : HASHCALC : Upstream MD5 Hash   : "
+                                + upstreammd5)
                     resp.close()
                     break
                 except requests.exceptions.Timeout:
-                    LOGGER.error("TIMEOUT : Connecion timed out gathering the header")
+                    LOGGER.error("WorkerID " + str(workerid) +
+                                 " : TIMEOUT : Connecion timed out gathering the header")
             if upstreammd5 == downstreammd5:
-                LOGGER.info("HASHMATCH: " + writepath + " MD5 match")
+                LOGGER.info("WorkerID " + str(workerid) +
+                            " : HASHMATCH : " + writepath + " - MD5 match")
                 dlreq = 0
             else:
-                LOGGER.info("HASHMISMATCH : " + writepath +
+                LOGGER.info("WorkerID " + str(workerid) + " : HASHMISMATCH : " + writepath +
                             " MD5 didnt match, progressing to download")
                 dlreq = 1
         except KeyError as err:
             logging.error(err)
             dlreq = 1
     else:
-        LOGGER.info("FILECHECK : " + writepath + " this was not detected, sending for download")
+        LOGGER.info("WorkerID " + str(workerid) + " : FILECHECK : " + writepath +
+                    " this was not detected, sending for download")
         dlreq = 1
     return dlreq
 
 
-def dlfile(dlreq, writepath, dluri):
+def dlfile(dlreq, writepath, dluri, workerid):
     """Download file when dlreq is passed in as 1"""
     if dlreq == 1:
         for _ in range(config.MAXRETRIES):
             try:
                 resp = requests.get(url=dluri, proxies=config.PROXY,
                                     stream=True, timeout=config.HTTPTIMEOUT)
-                LOGGER.info("DOWNLOADFILE : Downloading " + dluri + " to " + writepath)
+                LOGGER.info("WorkerID " + str(workerid) + " : DOWNLOADFILE : Downloading " + dluri)
+                LOGGER.info(" to " + writepath)
                 with open(writepath, 'wb') as tempfile:
                     for chunk in resp.iter_content(chunk_size=1024):
                         if chunk:
@@ -262,11 +270,12 @@ def dlfile(dlreq, writepath, dluri):
                 resp.close()
                 break
             except requests.exceptions.Timeout:
-                LOGGER.error("TIMEOUT : Connection timed out downloading the file")
+                LOGGER.error("WorkerID " + str(workerid) +
+                             " : TIMEOUT : Connection timed out downloading the file")
 
-        LOGGER.info("DOWNLOADCOMPLETE: " + writepath + " completed, sending for MD5 verification")
-        checkfile(writepath, dluri)
-
+        LOGGER.info("WorkerID " + str(workerid) + " : DOWNLOADCOMPLETE : "
+                    + writepath + " completed, sending for MD5 verification")
+        checkfile(writepath, dluri, workerid)
 
 
 def process(links):
@@ -290,7 +299,7 @@ def process(links):
             linkqueue.put((writepath, link))
 
     for worker in range(PROCS):
-        worker = DownloadWorker(linkqueue)
+        worker = DownloadWorker(worker, linkqueue)
         # Setting daemon to True will let the main
         # thread exit even though the workers are blocking
         worker.daemon = True

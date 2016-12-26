@@ -47,12 +47,12 @@ def purgeold(retention=config.RETENTION, rootdir=config.DESTINATIONPATH):
                 try:
                     os.remove(path)
                     incrementcounters(filesdeleted=1)
-                    LOGGER.info("RETENTIONDELETE: " + path + " was " + str(deltadays) +
+                    LOGGER.info("RETENTIONDELETE : " + path + " was " + str(deltadays) +
                                 " days old and deleted")
                 except OSError as err:
                     LOGGER.info("OSerror" + err)
             else:
-                LOGGER.info("RETENTIONKEEP: " + path + " is " + str(deltadays) +
+                LOGGER.info("RETENTIONKEEP : " + path + " is " + str(deltadays) +
                             " days old and is retained")
 
 
@@ -144,11 +144,11 @@ def checkdestpath(destinationpath=config.DESTINATIONPATH):
     if not os.path.exists(destinationpath):
         try:
             os.makedirs(destinationpath)
-            LOGGER.info("DIRCREATE: " + destinationpath + " was created")
+            LOGGER.info("DIRCREATE : " + destinationpath + " was created")
         except OSError as err:
             LOGGER.info(err)
         else:
-            LOGGER.info("DIRSKIP: " + destinationpath + " already exists, skipping mkdir")
+            LOGGER.info("DIRSKIP : " + destinationpath + " already exists, skipping mkdir")
     #Create anchor file to stop deletion
     anchorfile = (destinationpath + '\\anchor.txt')
     if not os.path.exists(anchorfile):
@@ -179,10 +179,10 @@ def makedir(path, destinationpath=config.DESTINATIONPATH):
         # Execute makedirs to build directors
         try:
             os.makedirs(mkpath)
-            LOGGER.info("DIRCHECKCREATE: " + mkpath + " was created")
+            LOGGER.info("DIRCHECKCREATE : " + mkpath + " was created")
             dircreated = True
         except OSError:
-            LOGGER.info("DIRCHECKSKIP: " + mkpath + " already exists, skipping mkdir")
+            LOGGER.info("DIRCHECKSKIP : " + mkpath + " already exists, skipping mkdir")
     return mkpath, filename, dircreated
 
 
@@ -242,7 +242,7 @@ def dlfile(dlreq, writepath, dluri):
             except requests.exceptions.Timeout:
                 LOGGER.error("TIMEOUT : Connection timed out downloading the file")
 
-        LOGGER.info("DOWNLOADCOMPLETE: " + writepath + " completed, sending for MD5 verification")
+        LOGGER.info("DOWNLOADCOMPLETE : " + writepath + " completed, sending for MD5 verification")
         checkfile(writepath, dluri)
 
 
@@ -288,4 +288,3 @@ if __name__ == "__main__":
     LOGGER.info("DOWNLOADSTATS : " + str(DIRSCREATED) + " directories were created")
     LOGGER.info("DOWNLOADSTATS : " + str(FILESCREATED) + " files were downloaded")
     LOGGER.info("****** PASS COMPLETED ******")
-
