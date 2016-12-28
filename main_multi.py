@@ -272,6 +272,8 @@ def dlfile(dlreq, writepath, dluri, workerid):
             except requests.exceptions.Timeout:
                 LOGGER.error("WorkerID " + str(workerid) +
                              " : TIMEOUT : Connection timed out downloading the file")
+            except requests.exceptions.ConnectionError:
+                LOGGER.error("TIMEOUT : Connection timed out downloading the file")
 
         LOGGER.info("WorkerID " + str(workerid) + " : DOWNLOADCOMPLETE : "
                     + writepath + " completed, sending for MD5 verification")
